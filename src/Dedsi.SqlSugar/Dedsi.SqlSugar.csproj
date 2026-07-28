@@ -5,7 +5,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="SqlSugarCore" Version="5.1.4.214" />
+      <PackageReference Include="SqlSugarCore" Version="5.1.4.216" />
       <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="$(AbpFrameworkVersion)" />
     </ItemGroup>
 
