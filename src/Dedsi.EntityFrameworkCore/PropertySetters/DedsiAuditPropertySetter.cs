@@ -20,27 +20,40 @@ public class DedsiAuditPropertySetter(
 
         if (targetObject is IDedsiHasCreationName dedsiHasCreationName)
         {
-            if (CurrentUser.Name.IsNullOrWhiteSpace())
+            // ä¸å­˜åœ¨å¤–éƒ¨èµ‹å€¼
+            if (dedsiHasCreationName.CreatorName.IsNullOrWhiteSpace())
             {
-                throw new ArgumentException($"CurrentUser.Name ²»´æÔÚÖµ¡£");
+                if (CurrentUser.Name.IsNullOrWhiteSpace())
+                {
+                    throw new ArgumentException($"CurrentUser.Name is NUll.");
+                }
+                
+                ObjectHelper.TrySetProperty(dedsiHasCreationName, x => x.CreatorName, () => CurrentUser.Name);
             }
-
-            ObjectHelper.TrySetProperty(dedsiHasCreationName, x => x.CreatorName, () => CurrentUser.Name);
         }
 
         if (targetObject is IDedsiHasCreationId dedsiMayHaveCreator)
         {
-            if (!CurrentUser.Id.HasValue)
-            {
-                throw new ArgumentException($"CurrentUser.Id ²»´æÔÚÖµ¡£");
-            }
 
-            ObjectHelper.TrySetProperty(dedsiMayHaveCreator, x => x.CreatorId, () => CurrentUser.Id);
+            // ä¸å­˜åœ¨å¤–éƒ¨èµ‹å€¼
+            if (dedsiMayHaveCreator.CreatorId == Guid.Empty)
+            {
+                if (!CurrentUser.Id.HasValue)
+                {
+                    throw new ArgumentException($"CurrentUser.Id Is Null.");
+                }
+                
+                ObjectHelper.TrySetProperty(dedsiMayHaveCreator, x => x.CreatorId, () => CurrentUser.Id);
+            }
         }
 
         if (targetObject is IDedsiHasCreationTime dedsiHasCreationTime)
         {
-            ObjectHelper.TrySetProperty(dedsiHasCreationTime, x => x.CreationTime, () => Clock.Now);
+            // ä¸å­˜åœ¨å¤–éƒ¨èµ‹å€¼
+            if (dedsiHasCreationTime.CreationTime == default)
+            {
+                ObjectHelper.TrySetProperty(dedsiHasCreationTime, x => x.CreationTime, () => Clock.Now);
+            }
         }
     }
 }
